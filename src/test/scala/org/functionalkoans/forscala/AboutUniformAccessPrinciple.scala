@@ -30,6 +30,7 @@ class AboutUniformAccessPrinciple extends KoanSuite {
     // uncomment following line to see what happens if you try to access parameterless method with parens
     //me.age() should be (7)
   }
+  
   koan("What happens when I update current year using property") {
     val me = new CalculatesAgeUsingProperty(2010, 2003)
 
