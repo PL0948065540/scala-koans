@@ -1,0 +1,8 @@
+ivyrepo/
+project/project/target/config-classes/$60fd80063b53bf3a23bb$.class
+project/project/target/
+project/target/
+*.jar
+sbtboot/
+target/
+.idea/
