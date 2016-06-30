@@ -10,7 +10,6 @@ class AboutTraits extends KoanSuite {
       def listen(event: Event): String
     }
 
-
     class MyListener extends EventListener {
       def listen(event: Event): String = {
         event match {
@@ -22,11 +21,10 @@ class AboutTraits extends KoanSuite {
 
     val evt = Event("Moose Stampede")
     val myListener = new MyListener
-    myListener.listen(evt) should be (__)
+    myListener.listen(evt) should be ("An unfortunate moose stampede occurred")
   }
 
   koan("A class can only \'extend\' from one class or trait, any subsequent extension should use the keyword \'with\'") {
-
     case class Event(name: String)
 
     trait EventListener {
@@ -46,7 +44,7 @@ class AboutTraits extends KoanSuite {
 
     val evt = Event("Woodchuck Stampede")
     val myListener = new MyListener
-    myListener.listen(evt) should be (__)
+    myListener.listen(evt) should be ("An unfortunate woodchuck stampede occurred")
   }
 
   koan("Traits are polymorphic. Any type can be referred to by another type if related by extension") {
@@ -67,13 +65,13 @@ class AboutTraits extends KoanSuite {
 
     val myListener = new MyListener
 
-    myListener.isInstanceOf[MyListener] should be(__)
-    myListener.isInstanceOf[EventListener] should be(__)
-    myListener.isInstanceOf[Any] should be(__)
-    myListener.isInstanceOf[AnyRef] should be(__)
+    myListener.isInstanceOf[MyListener] should be(true)
+    myListener.isInstanceOf[EventListener] should be(true)
+    myListener.isInstanceOf[Any] should be(true)
+    myListener.isInstanceOf[AnyRef] should be(true)
   }
 
-  koan("Traits can have concrete implementations that can be mixed into concrete classes with it's own state") {
+  koan("Traits can have concrete implementations that can be mixed into concrete classes with its own state") {
     trait Logging {
       var logCache = List[String]()
 
@@ -98,17 +96,15 @@ class AboutTraits extends KoanSuite {
     val welder = new Welder
     welder.weld()
 
-
     val baker = new Baker
     baker.bake()
 
-    welder.logCache.size should be(__)
-    baker.logCache.size should be(__)
+    welder.logCache.size should be(1)
+    baker.logCache.size should be(1)
   }
 
   koan("""Traits can also be mixed during instantiation after the fact!
           | This is useful if you only want to mixin per instance and not per class""") {
-
     trait Logging {
       var logCache = List[String]()
 
@@ -128,7 +124,7 @@ class AboutTraits extends KoanSuite {
     einstein.discover("Relativity!")
     einstein.log("Although it is utmost of importance that this does not fall into the wrong hands")
 
-    einstein.log.size should be (__)
+    einstein.log.size should be (1)
   }
 
   //Credit for the next set koans: http://www.artima.com/scalazine/articles/stackable_trait_pattern.html
@@ -146,7 +142,6 @@ class AboutTraits extends KoanSuite {
     def put(x: Int) { buf += x }
   }
 
-
   koan("Traits are stackable and can change the behavior of methods that the traits are stacked upon") {
     trait Doubling extends IntQueue {
       abstract override def put(x: Int) { super.put(2 * x) } //abstract override is necessary to stack traits
@@ -157,8 +152,8 @@ class AboutTraits extends KoanSuite {
     val myQueue = new MyQueue
     myQueue.put(3)
     myQueue.put(10)
-    myQueue.get() should be (__)
-    myQueue.get() should be (__)
+    myQueue.get() should be (3 * 2)
+    myQueue.get() should be (10 * 2)
   }
 
   koan("Just like other traits, stackable traits can be mixed after the fact") {
@@ -169,7 +164,7 @@ class AboutTraits extends KoanSuite {
     val myQueue = new BasicIntQueue with Doubling //mixin during instantiation
 
     myQueue.put(40)
-    myQueue.get() should be (__)
+    myQueue.get() should be (40 * 2)
   }
 
   koan(
@@ -189,10 +184,9 @@ class AboutTraits extends KoanSuite {
     myQueue put 4
     myQueue put 3
 
-    myQueue.get should be (__)
-    myQueue.get should be (__)
+    myQueue.get should be (5 * 2)
+    myQueue.get should be (4 * 2)
   }
-
 
   koan(
     """Same koans as before except that we swapped the order of the traits""") {
@@ -208,10 +202,9 @@ class AboutTraits extends KoanSuite {
     val myQueue = new BasicIntQueue with Incrementing with Doubling //mixin during instantiation
     myQueue put 4
     myQueue put 3
-    myQueue.get should be (__)
-    myQueue.get should be (__)
+    myQueue.get should be (4 * 2 + 1)
+    myQueue.get should be (3 * 2 + 1)
   }
-
 
   koan(
     """Using three traits to enhance the IntQueue: Doubling, Incrementing, and Filtering!""") {
@@ -234,11 +227,11 @@ class AboutTraits extends KoanSuite {
     myQueue put 4
     myQueue put -1
     myQueue put 3
-    myQueue.get should be (__)
-    myQueue.get should be (__)
+    myQueue.get should be (4 * 2 + 1)
+    myQueue.get should be (3 * 2 + 1)
   }
 
-  koan("Traits are instantiated before a the mixed-in class instantiation") {
+  koan("Traits are instantiated before the mixed-in class instantiation") {
     var sb = List[String]()
 
     trait T1 {
@@ -253,9 +246,14 @@ class AboutTraits extends KoanSuite {
     new C1
     sb = sb :+ "Created C1"
 
-    sb.mkString(";") should be(__)
+    val instantiationList = List(
+      "Creating C1",
+      "Instantiated T1",
+      "Instantiated C1",
+      "Created C1"
+    )
+    sb.mkString(";") should be(instantiationList.mkString(";"))
   }
-
 
   koan("Traits are instantiated before a classes instantiation from left to right") {
     var sb = List[String]()
@@ -276,7 +274,14 @@ class AboutTraits extends KoanSuite {
     new C1
     sb = sb :+ "Created C1"
 
-    sb.mkString(";") should be(__)
+    val instantiationList = List(
+      "Creating C1",
+      "Instantiated T1",
+      "Instantiated T2",
+      "Instantiated C1",
+      "Created C1"
+    )
+    sb.mkString(";") should be(instantiationList.mkString(";"))
   }
 
   koan("Instantiations are tracked internally and will not allow a duplicate instantiation. " +
@@ -300,9 +305,15 @@ class AboutTraits extends KoanSuite {
     new C1
     sb = sb :+ "Created C1"
 
-    sb.mkString(";") should be(__)
+    val instantiationList = List(
+      "Creating C1",
+      "Instantiated T2",
+      "Instantiated T1",
+      "Instantiated C1",
+      "Created C1"
+    )
+    sb.mkString(";") should be(instantiationList.mkString(";"))
   }
-
 
   koan("The diamond of death (http://en.wikipedia.org/wiki/Diamond_problem) is avoided since " +
     "instantiations are tracked and will not allow multiple instantiations") {
@@ -329,6 +340,14 @@ class AboutTraits extends KoanSuite {
     new C1
     sb = sb :+ "Created C1"
 
-    sb.mkString(";") should be(__)
+    val instantiationList = List(
+      "Creating C1",
+      "Instantiated T1",
+      "Instantiated T2",
+      "Instantiated T3",
+      "Instantiated C1",
+      "Created C1"
+    )
+    sb.mkString(";") should be(instantiationList.mkString(";"))
   }
 }
