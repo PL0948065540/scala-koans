@@ -1,4 +1,16 @@
 # scala-koans  
 
-To use: run koans.bat and enter "namaste" when prompted.  
 From: http://www.scalakoans.org/
+
+Linux and Mac:
+
+```shell
+$ ./koans
+```
+
+Windows:
+
+Run `koans.bat`.
+
+
+Enter `namaste` when prompted.
